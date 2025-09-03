@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Julius
+Comment=An open source re-implementation of Caesar III
+# Icon=julius
+Categories=Game;StrategyGame;
+TryExec=julius
+Exec=julius
+Terminal=false
+
