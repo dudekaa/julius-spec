@@ -1,16 +1,14 @@
-%define packagePatch 1
 %global debug_package %{nil}
 
-Name:    julius 
+Name:    julius
 Version: 1.8.0
-Release: %{packagePatch}%{?dist}
+Release: 2%{?dist}
 Summary: An open source re-implementation of Caesar III 
 
 Group:   Games
 License: AGPLv3
 URL:     https://github.com/bvschaik/julius 
-Source:  https://github.com/bvschaik/julius/releases/download/v%{version}/julius-%{version}-source.tar.gz 
-Source1: https://github.com/dudekaa/julius-spec/archive/refs/tags/v%{version}-%{packagePatch}.zip
+Source:  %{url}/releases/download/v%{version}/julius-%{version}-source.tar.gz
 
 BuildRequires: gcc
 BuildRequires: cmake
@@ -39,11 +37,9 @@ Enhancements for Julius include:
 
 %prep
 %setup
-%setup -T -D -a 1
 
 
 %build
-#configure
 mkdir build && cd build
 %cmake -DIS_RELEASE_VERSION=1 ..
 %cmake_build
