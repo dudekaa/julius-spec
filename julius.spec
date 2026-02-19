@@ -12,13 +12,10 @@ Source:  %{url}/releases/download/v%{version}/julius-%{version}-source.tar.gz
 
 BuildRequires: gcc
 BuildRequires: cmake
-BuildRequires: SDL2-devel
-BuildRequires: SDL2_mixer-devel
-BuildRequires: libpng-devel
+BuildRequires: pkgconfig(SDL2)
+BuildRequires: pkgconfig(SDL2_mixer)
+BuildRequires: pkgconfig(libpng)
 BuildRequires: desktop-file-utils
-Requires: SDL2
-Requires: SDL2_mixer
-Requires: libpng 
 
 %description
 Julius is a fully working open-source version of Caesar 3, with the same logic as the original, but with some UI enhancements, that can be played on multiple platforms.
@@ -60,5 +57,8 @@ desktop-file-validate $RPM_BUILD_ROOT%{_datadir}/applications/%{name}.desktop
 
 
 %changelog
+* Thu Feb 19 2026 Arnošt Dudek <arnost@arnostdudek.cz> - 1.8.0-2
+- rework dependencies
+
 * Wed Sep 03 2025 Arnošt Dudek <arnost@arnostdudek.cz> - 1.8.0-1
 - Initial build
