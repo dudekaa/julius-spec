@@ -7,6 +7,7 @@ Group:   Games
 License: AGPLv3
 URL:     https://github.com/bvschaik/julius 
 Source:  %{url}/releases/download/v%{version}/julius-%{version}-source.tar.gz
+Source1: %{name}.desktop
 
 BuildRequires: gcc
 BuildRequires: cmake
@@ -31,7 +32,7 @@ Enhancements for Julius include:
 
 
 %prep
-%setup
+%autosetup -n %{name}-%{version}
 
 
 %build
@@ -54,8 +55,8 @@ Enhancements for Julius include:
 install -pDm0755 %_builddir/%{name}-%{version}/build/redhat-linux-build/%{name} %{buildroot}%{_bindir}/%{name}
 
 # menu item
-install -pDm0644 %_builddir/%{name}-%{version}/%{name}-spec-%{version}-%{packagePatch}/%{name}.desktop %{buildroot}%{_datadir}/applications/%{name}.desktop
-desktop-file-validate $RPM_BUILD_ROOT%{_datadir}/applications/%{name}.desktop
+install -pDm0644 %{SOURCE1} %{buildroot}%{_datadir}/applications/%{name}.desktop
+desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
 
 
 %files
