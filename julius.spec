@@ -1,5 +1,3 @@
-%global debug_package %{nil}
-
 Name:    julius
 Version: 1.8.0
 Release: 2%{?dist}
@@ -37,9 +35,18 @@ Enhancements for Julius include:
 
 
 %build
-mkdir build && cd build
-%cmake -DIS_RELEASE_VERSION=1 ..
+# CMake build flags:
+# -DCMAKE_BUILD_TYPE=RelWithDebInfo: Build with optimizations enabled and debug symbols included - Fedora recommendation
+# -DIS_RELEASE_VERSION=1: Mark this as an official release version (not a development build) - we build directly from tags
+# -DSYSTEM_LIBS=ON: Use system-provided libraries (SDL2, SDL2_mixer, libpng) instead of bundled versions
+%cmake \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    -DIS_RELEASE_VERSION=1 \
+    -DSYSTEM_LIBS=ON
 %cmake_build
+
+
+%check
 %ctest
 
 
@@ -59,6 +66,7 @@ desktop-file-validate $RPM_BUILD_ROOT%{_datadir}/applications/%{name}.desktop
 %changelog
 * Thu Feb 19 2026 Arnošt Dudek <arnost@arnostdudek.cz> - 1.8.0-2
 - rework dependencies
+- enable debug packages
 
 * Wed Sep 03 2025 Arnošt Dudek <arnost@arnostdudek.cz> - 1.8.0-1
 - Initial build
