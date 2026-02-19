@@ -52,7 +52,7 @@ Enhancements for Julius include:
 
 
 %install
-install -pDm0755 %_builddir/%{name}-%{version}/build/redhat-linux-build/%{name} %{buildroot}%{_bindir}/%{name}
+install -pDm0755 %{_vpath_builddir}/%{name} %{buildroot}%{_bindir}/%{name}
 
 # menu item
 install -pDm0644 %{SOURCE1} %{buildroot}%{_datadir}/applications/%{name}.desktop
