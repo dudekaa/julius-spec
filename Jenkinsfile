@@ -70,6 +70,50 @@ pipeline {
             }
         }
 
+        stage('Check Release Bump') {
+            when {
+                beforeAgent true
+                not {
+                    environment name: 'UPDATE_NEEDED', value: 'true'
+                }
+            }
+            agent {
+                docker {
+                    alwaysPull true
+                    image "${REGISTRY}/${IMAGE_NAME}"
+                    registryCredentialsId DOCKER_CRED_ID
+                    registryUrl "https://${REGISTRY}"
+                    reuseNode true
+                }
+            }
+            steps {
+                script {
+                    // Get Local Release (from Spec file)
+                    def localRelease = sh(returnStdout: true, script: "grep '^Release:' ${PACKAGE_NAME}.spec | awk '{print \$2}' | sed 's/%{?dist}//'").trim()
+                    echo "Local Spec Release: ${localRelease}"
+
+                    // Get COPR Release (latest build) using jq
+                    def coprRelease = ''
+                    withCredentials([file(credentialsId: COPR_CONFIG_ID, variable: 'COPR_CONFIG_FILE')]) {
+                        coprRelease = sh(returnStdout: true, script: """
+                            copr-cli --config \${COPR_CONFIG_FILE} get-package ${PACKAGE_NAME} --name ${PACKAGE_NAME} --with-latest-build --output-format json \
+                            | jq -r '.latest_build.source_package.name' \
+                            | awk -F'-' '{print \$(NF-1)}'
+                        """).trim()
+                    }
+                    echo "COPR Release: ${coprRelease}"
+
+                    // Compare releases (simple numeric comparison for format like "1" or "2")
+                    if (coprRelease && localRelease.toInteger() > coprRelease.toInteger()) {
+                        echo "Local release (${localRelease}) is higher than COPR release (${coprRelease}). Triggering build."
+                        env.UPDATE_NEEDED = 'true'
+                    } else {
+                        echo "No release bump detected. Local: ${localRelease}, COPR: ${coprRelease}"
+                    }
+                }
+            }
+        }
+
         stage('Lint') {
             when {
                 beforeAgent true
