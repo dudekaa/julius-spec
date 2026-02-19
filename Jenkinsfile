@@ -97,8 +97,8 @@ pipeline {
                     withCredentials([file(credentialsId: COPR_CONFIG_ID, variable: 'COPR_CONFIG_FILE')]) {
                         coprRelease = sh(returnStdout: true, script: """
                             copr-cli --config \${COPR_CONFIG_FILE} get-package ${PACKAGE_NAME} --name ${PACKAGE_NAME} --with-latest-build --output-format json \
-                            | jq -r '.latest_build.source_package.name' \
-                            | awk -F'-' '{print \$(NF-1)}'
+                            | jq -r '.latest_build.source_package.version' \
+                            | awk -F'-' '{print \$2}'
                         """).trim()
                     }
                     echo "COPR Release: ${coprRelease}"
