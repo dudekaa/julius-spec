@@ -55,8 +55,9 @@ Enhancements for Julius include:
 install -pDm0755 %{_vpath_builddir}/%{name} %{buildroot}%{_bindir}/%{name}
 
 # menu item
-install -pDm0644 %{SOURCE1} %{buildroot}%{_datadir}/applications/%{name}.desktop
-desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
+desktop-file-install \
+    --dir=%{buildroot}%{_datadir}/applications \
+    %{name}.desktop
 
 
 %files
