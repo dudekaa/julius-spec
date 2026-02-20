@@ -3,8 +3,8 @@ index 3ec14b10..49875117 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -1,4 +1,4 @@
--cmake_minimum_required(VERSION 3.10)
-+cmake_minimum_required(VERSION 3.50)
+-cmake_minimum_required(VERSION 3.1)
++cmake_minimum_required(VERSION 3.5)
  include(CMakeDependentOption)
  
  set(TARGET_PLATFORM "default" CACHE STRING "Platform to cross-compile for. Options: vita switch android ios emscripten. Leave blank for no cross compilation")
