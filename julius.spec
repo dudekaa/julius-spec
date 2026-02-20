@@ -11,7 +11,7 @@ Source1: %{name}.desktop
 
 BuildRequires: gcc
 BuildRequires: cmake
-BuildRequires: pkgconfig(SDL2)
+BuildRequires: pkgconfig(sdl2)
 BuildRequires: pkgconfig(SDL2_mixer)
 BuildRequires: pkgconfig(libpng)
 BuildRequires: desktop-file-utils
