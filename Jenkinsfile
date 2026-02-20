@@ -106,12 +106,11 @@ pipeline {
                     // Compare releases (simple numeric comparison for format like "1" or "2")
                     if (coprRelease && localRelease.toInteger() > coprRelease.toInteger()) {
                         echo "Local release (${localRelease}) is higher than COPR release (${coprRelease}). Triggering build."
-                        env.RELEASE_BUMP_ONLY = true
+                        env.RELEASE_BUMP_ONLY = 'true'
 
                         // Set trigger for next steps
                         env.UPDATE_NEEDED = 'true'
                     } else {
-                        env.RELEASE_BUMP_ONLY = false
                         echo "No release bump detected. Local: ${localRelease}, COPR: ${coprRelease}"
                     }
                 }
