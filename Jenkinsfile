@@ -60,6 +60,7 @@ pipeline {
                         echo "No changes detected. Skipping build."
                         currentBuild.result = 'SUCCESS'
                         env.UPDATE_NEEDED = 'false'
+                        env.NEW_VERSION = localVersion
                     } else {
                         echo "New version detected (${localVersion} -> ${remoteVersion})! Preparing update."
                         env.UPDATE_NEEDED = 'true'
