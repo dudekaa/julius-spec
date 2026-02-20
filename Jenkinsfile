@@ -98,7 +98,7 @@ pipeline {
                         coprRelease = sh(returnStdout: true, script: """
                             copr-cli --config \${COPR_CONFIG_FILE} get-package ${PACKAGE_NAME} --name ${PACKAGE_NAME} --with-latest-build --output-format json \
                             | jq -r '.latest_build.source_package.version' \
-                            | awk -F'-' '{print \$2}'
+                            | cut -d'-' -f2
                         """).trim()
                     }
                     echo "COPR Release: ${coprRelease}"
