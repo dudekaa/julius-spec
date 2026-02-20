@@ -9,6 +9,8 @@ URL:     https://github.com/bvschaik/julius
 Source:  %{url}/releases/download/v%{version}/julius-%{version}-source.tar.gz
 Source1: %{name}.desktop
 
+Patch1: patches/01-cmake-min-version.patch
+
 BuildRequires: gcc
 BuildRequires: cmake
 BuildRequires: pkgconfig(sdl2)
