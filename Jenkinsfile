@@ -106,8 +106,9 @@ pipeline {
                     // Compare releases (simple numeric comparison for format like "1" or "2")
                     if (coprRelease && localRelease.toInteger() > coprRelease.toInteger()) {
                         echo "Local release (${localRelease}) is higher than COPR release (${coprRelease}). Triggering build."
-                        env.UPDATE_NEEDED = 'true'
+                        env.RELEASE_BUMP_ONLY = true
                     } else {
+                        env.RELEASE_BUMP_ONLY = false
                         echo "No release bump detected. Local: ${localRelease}, COPR: ${coprRelease}"
                     }
                 }
@@ -151,14 +152,12 @@ pipeline {
             }
             steps {
                 script {
-                    // Replace Version in Spec
-                    sh "sed -i 's/^Version: .*/Version: ${env.NEW_VERSION}/' ${PACKAGE_NAME}.spec"
-
-                    // Reset Release to 1 for the new version
-                    sh "sed -i 's/^Release: .*/Release: 1%{?dist}/' ${PACKAGE_NAME}.spec"
-
-                    // Debug: Verify change
-                    sh "grep -E '^(Version|Release):' ${PACKAGE_NAME}.spec"
+                    // NOTE: we need to generate changelog first, then we reset the release number,
+                    //       therefore update the version first, then changelog, then reset the release number
+                    if (!env.RELEASE_BUMP_ONLY) {
+                        // Replace Version in Spec
+                        sh "sed -i 's/^Version: .*/Version: ${env.NEW_VERSION}/' ${PACKAGE_NAME}.spec"
+                    }
 
                     // Bump Release & Add Changelog (rpmdev-bumpspec)
                     // -u: Sets the user for the changelog entry
@@ -172,8 +171,15 @@ pipeline {
                         ${PACKAGE_NAME}.spec
                     """
 
+                    if (!env.RELEASE_BUMP_ONLY) {
+                        // Reset Release to 1 for the new version
+                        sh "sed -i 's/^Release: .*/Release: 1%{?dist}/' ${PACKAGE_NAME}.spec"
+                    }
+
                     // Debug: Use rpmspec to query the fully expanded Release field
+                    sh "rpmspec -q --qf 'Version: %{VERSION}\n' ${PACKAGE_NAME}.spec"
                     sh "rpmspec -q --qf 'Release: %{RELEASE}\n' ${PACKAGE_NAME}.spec"
+
                     // Debug: Show what happened with changelog
                     sh "grep -A 5 '%changelog' ${PACKAGE_NAME}.spec"
 
