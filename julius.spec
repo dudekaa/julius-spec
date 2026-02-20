@@ -10,7 +10,7 @@ URL:     https://github.com/bvschaik/julius
 Source:  %{url}/archive/refs/tags/v%{version}.tar.gz
 Source1: %{name}.desktop
 
-Patch1: patches/01-cmake-min-version.patch
+Patch1: 01-cmake-min-version.patch
 
 BuildRequires: gcc
 BuildRequires: cmake
