@@ -5,8 +5,9 @@ Summary: An open source re-implementation of Caesar III
 
 Group:   Games
 License: AGPLv3
-URL:     https://github.com/bvschaik/julius 
-Source:  %{url}/releases/download/v%{version}/julius-%{version}-source.tar.gz
+URL:     https://github.com/bvschaik/julius
+# e.g. https://github.com/bvschaik/julius/archive/refs/tags/v1.8.0.tar.gz
+Source:  %{url}/archive/refs/tags/v%{version}.tar.gz
 Source1: %{name}.desktop
 
 Patch1: patches/01-cmake-min-version.patch
