@@ -152,28 +152,24 @@ pipeline {
             }
             steps {
                 script {
-                    // NOTE: we need to generate changelog first, then we reset the release number,
-                    //       therefore update the version first, then changelog, then reset the release number
-                    if (!env.RELEASE_BUMP_ONLY) {
-                        // Replace Version in Spec
-                        sh "sed -i 's/^Version: .*/Version: ${env.NEW_VERSION}/' ${PACKAGE_NAME}.spec"
-                    }
-
-                    // Bump Release & Add Changelog (rpmdev-bumpspec)
-                    // -u: Sets the user for the changelog entry
-                    // -c: The comment to add
-                    // This command automatically increments the first number in 'Release'
-                    // and prepends a correctly formatted changelog entry.
-                    sh """
-                        rpmdev-bumpspec \
-                        --comment "Automated update to upstream version ${env.NEW_VERSION}" \
-                        --userstring "Jenkins <jenkins@nostovo>" \
-                        ${PACKAGE_NAME}.spec
-                    """
-
-                    if (!env.RELEASE_BUMP_ONLY) {
-                        // Reset Release to 1 for the new version
-                        sh "sed -i 's/^Release: .*/Release: 1%{?dist}/' ${PACKAGE_NAME}.spec"
+                    if (env.RELEASE_BUMP_ONLY == 'true') {
+                        // Just bump the release number (e.g., 1 -> 2)
+                        sh """
+                            rpmdev-bumpspec \
+                            --comment "Minor spec file updates" \
+                            --userstring "Jenkins <jenkins@nostovo>" \
+                            ${PACKAGE_NAME}.spec
+                        """
+                    } else {
+                        // Atomic Version Update:
+                        // Sets Version to NEW_VERSION, resets Release to 1, and adds changelog
+                        sh """
+                            rpmdev-bumpspec \
+                            --new "${env.NEW_VERSION}" \
+                            --comment "Automated update to upstream version ${env.NEW_VERSION}" \
+                            --userstring "Jenkins <jenkins@nostovo>" \
+                            ${PACKAGE_NAME}.spec
+                        """
                     }
 
                     // Debug: Use rpmspec to query the fully expanded Release field
