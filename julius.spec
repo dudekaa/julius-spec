@@ -1,6 +1,6 @@
 Name:    julius
 Version: 1.8.0
-Release: 4%{?dist}
+Release: 5%{?dist}
 Summary: An open source re-implementation of Caesar III 
 
 Group:   Games
@@ -68,6 +68,9 @@ desktop-file-validate %{buildroot}%{_datadir}/applications/%{name}.desktop
 
 
 %changelog
+* Sat May 02 2026 Jenkins <jenkins@nostovo> - 1.8.0-5
+- Automated update to upstream version
+
 * Fri Feb 20 2026 Jenkins <jenkins@nostovo> - 1.8.0-4
 - Minor spec file updates
 
