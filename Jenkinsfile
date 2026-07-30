@@ -44,7 +44,12 @@ pipeline {
                         | awk '{print \$2}' \
                         | sed 's|refs/tags/||'
                     """).trim()
-                    echo "Upstream Tag: ${remoteTag}"
+
+                    if (remoteTag == '') {
+                        error "Upstream tag is empty"
+                    } else {
+                        echo "Upstream tag: ${remoteTag}"
+                    }
 
                     // Strip leading 'v' to get the version number (e.g., v1.8.0 -> 1.8.0)
                     def remoteVersion = remoteTag.replaceFirst(/^v/, '')
